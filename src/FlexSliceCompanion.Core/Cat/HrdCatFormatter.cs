@@ -14,4 +14,6 @@ public sealed class HrdCatFormatter
     public string FormatOk() => "OK;";
 
     public string FormatUnknown() => "?;";
+
+    public string FormatIdentifier() => "ID019;";
 }

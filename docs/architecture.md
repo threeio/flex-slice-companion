@@ -32,3 +32,9 @@ The MVP should avoid deep automation until the basics are stable:
 6. Launch WSJT-X for slice A.
 7. Expose CAT on `localhost:5101`.
 8. Sync frequency both ways.
+
+## References
+
+- FlexRadio API overview: https://www.flexradio.com/api/
+- SmartSDR TCP/IP API notes: https://github-wiki-see.page/m/flexradio/smartsdr-api-docs/wiki/SmartSDR-TCPIP-API
+- SmartSDR discovery protocol notes: https://github-wiki-see.page/m/flexradio/smartsdr-api-docs/wiki/Discovery-protocol

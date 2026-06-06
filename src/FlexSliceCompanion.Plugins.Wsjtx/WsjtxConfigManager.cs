@@ -2,7 +2,7 @@ using FlexSliceCompanion.Core.Apps;
 
 namespace FlexSliceCompanion.Plugins.Wsjtx;
 
-public sealed class WsjtxConfigManager
+public sealed class WsjtxConfigManager : IAppSettingsDirectoryResolver
 {
     public string ResolveSettingsDirectory(string root, string sliceLetter)
     {
@@ -17,6 +17,7 @@ public sealed class WsjtxConfigManager
     {
         ArgumentNullException.ThrowIfNull(request);
         Directory.CreateDirectory(request.SettingsDirectory);
+        WriteCompanionSettings(request);
     }
 
     public WsjtxLaunchPlan BuildLaunchPlan(string executablePath, AppLaunchRequest request)
@@ -37,4 +38,26 @@ public sealed class WsjtxConfigManager
     }
 
     private static string Quote(string value) => $"\"{value}\"";
+
+    private static void WriteCompanionSettings(AppLaunchRequest request)
+    {
+        var path = Path.Combine(request.SettingsDirectory, "FlexSliceCompanion.wsjtx.ini");
+        var lines = new[]
+        {
+            "[FlexSliceCompanion]",
+            $"Slice={request.Slice.Letter}",
+            $"SliceId={request.Slice.SliceId}",
+            $"FrequencyHz={request.Slice.FrequencyHz:0}",
+            $"Mode={request.Slice.Mode}",
+            $"CatHost=127.0.0.1",
+            $"CatPort={request.CatPort}",
+            $"RxAudio={request.RxAudioEndpoint.DisplayName}",
+            $"TxAudio={request.TxAudioEndpoint.DisplayName}",
+            string.Empty,
+            "; WSJT-X stores its own settings in this per-slice directory.",
+            "; This companion file records the values FlexSliceCompanion selected."
+        };
+
+        File.WriteAllLines(path, lines);
+    }
 }

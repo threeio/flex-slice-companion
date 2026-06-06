@@ -48,6 +48,16 @@ public sealed class HrdCatParser
             };
         }
 
+        if (command.Equals("ID", StringComparison.OrdinalIgnoreCase))
+        {
+            return new CatCommand { Kind = CatCommandKind.Identify, Raw = raw };
+        }
+
+        if (command.StartsWith("AI", StringComparison.OrdinalIgnoreCase))
+        {
+            return new CatCommand { Kind = CatCommandKind.AutoInformation, Raw = raw };
+        }
+
         return new CatCommand { Kind = CatCommandKind.Unknown, Raw = raw };
     }
 }

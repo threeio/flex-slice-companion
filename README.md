@@ -14,9 +14,19 @@ The first MVP targets:
 
 ## Current Status
 
-This repo is scaffolded around the attached Windows-first project plan. The core logic is intentionally separated from WPF and FlexLib so the shared pieces can later be reused by a SmartSDR TCP/UDP client or an Avalonia front end.
+This repo implements a first MVP around the attached Windows-first project plan. The core logic is intentionally separated from WPF and FlexLib so the shared pieces can later be reused by another front end.
 
-The local OpenClaw machine does not currently have the .NET SDK installed, so build/test verification should be run from Windows with .NET 8 or newer.
+The app currently supports:
+
+- FlexLib adapter boundary for the preferred Windows integration path.
+- Direct SmartSDR UDP discovery and TCP command/status parsing.
+- Demo radio fallback for development without hardware.
+- DAXv1/DAXv2 endpoint detection and per-slice DAX selection.
+- Per-slice CAT server management.
+- WSJT-X per-slice launch directories and companion settings files.
+- Windows logging under `%LOCALAPPDATA%/FlexSliceCompanion/logs`.
+
+Hardware validation still needs a Windows machine with SmartSDR/FlexRadio available.
 
 ## Layout
 
@@ -24,8 +34,8 @@ The local OpenClaw machine does not currently have the .NET SDK installed, so bu
 src/
   FlexSliceCompanion.Core/          Shared models, DAX detection, CAT parser, config
   FlexSliceCompanion.Windows/       WPF shell and Windows services
-  FlexSliceCompanion.FlexLib/       Windows-first FlexLib adapter placeholder
-  FlexSliceCompanion.SmartSdrApi/   Future cross-platform TCP/UDP API adapter
+  FlexSliceCompanion.FlexLib/       Windows-first FlexLib adapter boundary
+  FlexSliceCompanion.SmartSdrApi/   Direct SmartSDR TCP/UDP discovery and command path
   FlexSliceCompanion.Plugins.Wsjtx/ WSJT-X launch/config helpers
 tests/
   FlexSliceCompanion.Tests/         xUnit tests for core MVP behavior
@@ -61,11 +71,7 @@ The workflow:
 Portable release:
 
 ```powershell
-dotnet publish src/FlexSliceCompanion.Windows/FlexSliceCompanion.Windows.csproj `
-  -c Release `
-  -r win-x64 `
-  --self-contained true `
-  /p:PublishSingleFile=true
+./scripts/package-windows.ps1
 ```
 
 ## DAX Compatibility

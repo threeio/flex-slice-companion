@@ -5,11 +5,7 @@ The first public distribution should be a portable unsigned zip.
 ## Publish
 
 ```powershell
-dotnet publish src/FlexSliceCompanion.Windows/FlexSliceCompanion.Windows.csproj `
-  -c Release `
-  -r win-x64 `
-  --self-contained true `
-  /p:PublishSingleFile=true
+./scripts/package-windows.ps1
 ```
 
 Package:

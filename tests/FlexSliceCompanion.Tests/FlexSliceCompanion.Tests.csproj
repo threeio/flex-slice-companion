@@ -13,5 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FlexSliceCompanion.Core\FlexSliceCompanion.Core.csproj" />
     <ProjectReference Include="..\..\src\FlexSliceCompanion.Plugins.Wsjtx\FlexSliceCompanion.Plugins.Wsjtx.csproj" />
+    <ProjectReference Include="..\..\src\FlexSliceCompanion.SmartSdrApi\FlexSliceCompanion.SmartSdrApi.csproj" />
   </ItemGroup>
 </Project>

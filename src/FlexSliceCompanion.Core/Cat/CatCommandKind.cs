@@ -8,5 +8,7 @@ public enum CatCommandKind
     GetMode,
     SetMode,
     GetPtt,
-    SetPtt
+    SetPtt,
+    Identify,
+    AutoInformation
 }

@@ -17,7 +17,7 @@ public sealed class CatServerTests
         var response = await server.HandleCommandAsync("FA00014074000;");
 
         Assert.Equal("OK;", response);
-        Assert.Equal(14074000, radio.LastFrequencyHz);
+        Assert.Equal(14074000d, radio.LastFrequencyHz);
     }
 
     private sealed class FakeRadioClient : IRadioClient

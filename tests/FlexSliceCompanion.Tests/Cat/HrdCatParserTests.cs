@@ -21,7 +21,7 @@ public sealed class HrdCatParserTests
         var command = _parser.Parse("FA00014074000;");
 
         Assert.Equal(CatCommandKind.SetFrequency, command.Kind);
-        Assert.Equal(14074000, command.FrequencyHz);
+        Assert.Equal(14074000d, command.FrequencyHz);
     }
 
     [Fact]
@@ -42,5 +42,15 @@ public sealed class HrdCatParserTests
 
         Assert.Equal(CatCommandKind.SetPtt, command.Kind);
         Assert.Equal(expected, command.Ptt);
+    }
+
+    [Theory]
+    [InlineData("ID;", CatCommandKind.Identify)]
+    [InlineData("AI0;", CatCommandKind.AutoInformation)]
+    public void Parse_CompatibilityCommands(string raw, CatCommandKind expected)
+    {
+        var command = _parser.Parse(raw);
+
+        Assert.Equal(expected, command.Kind);
     }
 }

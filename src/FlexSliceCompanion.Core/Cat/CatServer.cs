@@ -36,10 +36,22 @@ public sealed class CatServer : IAsyncDisposable
         _listener = new TcpListener(IPAddress.Loopback, _options.Port);
         _listener.Start();
 
-        while (!cancellationToken.IsCancellationRequested)
+        try
         {
-            var client = await _listener.AcceptTcpClientAsync(cancellationToken);
-            _ = Task.Run(() => HandleClientAsync(client, cancellationToken), cancellationToken);
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                var client = await _listener.AcceptTcpClientAsync(cancellationToken);
+                _ = Task.Run(() => HandleClientAsync(client, cancellationToken), cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+        catch (SocketException) when (cancellationToken.IsCancellationRequested || _listener is null)
+        {
         }
     }
 
@@ -56,15 +68,18 @@ public sealed class CatServer : IAsyncDisposable
         await using var stream = tcpClient.GetStream();
 
         var buffer = new byte[512];
-        var read = await stream.ReadAsync(buffer, cancellationToken);
-        if (read <= 0)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            return;
-        }
+            var read = await stream.ReadAsync(buffer, cancellationToken);
+            if (read <= 0)
+            {
+                return;
+            }
 
-        var raw = Encoding.ASCII.GetString(buffer, 0, read);
-        var response = await HandleCommandAsync(raw, cancellationToken);
-        await stream.WriteAsync(Encoding.ASCII.GetBytes(response), cancellationToken);
+            var raw = Encoding.ASCII.GetString(buffer, 0, read);
+            var response = await HandleCommandAsync(raw, cancellationToken);
+            await stream.WriteAsync(Encoding.ASCII.GetBytes(response), cancellationToken);
+        }
     }
 
     public async Task<string> HandleCommandAsync(string rawCommand, CancellationToken cancellationToken = default)
@@ -87,6 +102,10 @@ public sealed class CatServer : IAsyncDisposable
                 return _slice is null ? _formatter.FormatUnknown() : _formatter.FormatPtt(_slice.IsTx);
             case CatCommandKind.SetPtt when command.Ptt is not null:
                 await _radioClient.SetPttAsync(_options.SliceId, command.Ptt.Value, cancellationToken);
+                return _formatter.FormatOk();
+            case CatCommandKind.Identify:
+                return _formatter.FormatIdentifier();
+            case CatCommandKind.AutoInformation:
                 return _formatter.FormatOk();
             default:
                 return _formatter.FormatUnknown();

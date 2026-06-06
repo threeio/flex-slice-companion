@@ -10,6 +10,7 @@
     <ProjectReference Include="..\FlexSliceCompanion.Core\FlexSliceCompanion.Core.csproj" />
     <ProjectReference Include="..\FlexSliceCompanion.FlexLib\FlexSliceCompanion.FlexLib.csproj" />
     <ProjectReference Include="..\FlexSliceCompanion.Plugins.Wsjtx\FlexSliceCompanion.Plugins.Wsjtx.csproj" />
+    <ProjectReference Include="..\FlexSliceCompanion.SmartSdrApi\FlexSliceCompanion.SmartSdrApi.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.2.1" />
