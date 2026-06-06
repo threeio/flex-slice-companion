@@ -1,0 +1,102 @@
+<Window x:Class="FlexSliceCompanion.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="FlexSliceCompanion"
+        Height="680"
+        Width="1040"
+        MinHeight="560"
+        MinWidth="860">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Button Content="Discover" Command="{Binding DiscoverCommand}" Margin="0,0,8,0" Padding="16,6" />
+                <Button Content="Refresh DAX" Command="{Binding RefreshDaxCommand}" Padding="16,6" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="FlexSliceCompanion" FontSize="22" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Status}" Foreground="#555" Margin="0,3,0,0" />
+            </StackPanel>
+        </DockPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="Radios" Grid.Column="0">
+                <DockPanel Margin="8">
+                    <Button DockPanel.Dock="Bottom"
+                            Content="Connect"
+                            Command="{Binding ConnectCommand}"
+                            Margin="0,10,0,0"
+                            Padding="12,6" />
+                    <ListBox ItemsSource="{Binding Radios}"
+                             SelectedItem="{Binding SelectedRadio}"
+                             DisplayMemberPath="Nickname" />
+                </DockPanel>
+            </GroupBox>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <GroupBox Header="Slices" Grid.Row="0">
+                    <DockPanel Margin="8">
+                        <Button DockPanel.Dock="Bottom"
+                                Content="Launch WSJT-X for Selected Slice"
+                                Command="{Binding LaunchWsjtxCommand}"
+                                Margin="0,10,0,0"
+                                Padding="12,6" />
+                        <DataGrid ItemsSource="{Binding Slices}"
+                                  SelectedItem="{Binding SelectedSlice}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Slice" Binding="{Binding Letter}" Width="70" />
+                                <DataGridTextColumn Header="Frequency Hz" Binding="{Binding FrequencyHz}" Width="140" />
+                                <DataGridTextColumn Header="Mode" Binding="{Binding Mode}" Width="90" />
+                                <DataGridTextColumn Header="DAX" Binding="{Binding DaxChannel}" Width="70" />
+                                <DataGridCheckBoxColumn Header="TX" Binding="{Binding IsTx}" Width="60" />
+                                <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="80" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </GroupBox>
+
+                <GroupBox Header="DAX Endpoints" Grid.Row="2">
+                    <DataGrid ItemsSource="{Binding DaxEndpoints}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              Margin="8">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding DisplayName}" Width="*" />
+                            <DataGridTextColumn Header="Generation" Binding="{Binding Generation}" Width="110" />
+                            <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100" />
+                            <DataGridTextColumn Header="Channel" Binding="{Binding Channel}" Width="80" />
+                            <DataGridCheckBoxColumn Header="Reserved" Binding="{Binding IsReserved}" Width="90" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+
+        <TextBlock Grid.Row="2"
+                   Text="{Binding DaxMessage}"
+                   Margin="0,12,0,0"
+                   Foreground="#8A5A00"
+                   TextWrapping="Wrap" />
+    </Grid>
+</Window>

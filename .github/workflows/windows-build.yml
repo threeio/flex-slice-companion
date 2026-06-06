@@ -1,0 +1,59 @@
+name: Windows Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-publish:
+    name: Test and publish Windows app
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore FlexSliceCompanion.sln
+
+      - name: Test
+        run: dotnet test FlexSliceCompanion.sln --configuration Release --no-restore --verbosity normal
+
+      - name: Publish win-x64 portable build
+        run: >
+          dotnet publish src/FlexSliceCompanion.Windows/FlexSliceCompanion.Windows.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:PublishReadyToRun=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -o artifacts/FlexSliceCompanion-win-x64
+
+      - name: Copy release docs
+        shell: pwsh
+        run: |
+          Copy-Item README.md artifacts/FlexSliceCompanion-win-x64/
+          Copy-Item LICENSE artifacts/FlexSliceCompanion-win-x64/
+          Copy-Item appsettings.example.json artifacts/FlexSliceCompanion-win-x64/
+          Copy-Item docs artifacts/FlexSliceCompanion-win-x64/docs -Recurse
+
+      - name: Upload portable build
+        uses: actions/upload-artifact@v4
+        with:
+          name: FlexSliceCompanion-win-x64
+          path: artifacts/FlexSliceCompanion-win-x64
+          if-no-files-found: error
