@@ -47,6 +47,17 @@ dotnet test
 dotnet build src/FlexSliceCompanion.Windows/FlexSliceCompanion.Windows.csproj
 ```
 
+## GitHub Actions
+
+`.github/workflows/windows-build.yml` runs on pushes to `main`, pull requests targeting `main`, and manual dispatches.
+
+The workflow:
+
+- Restores the solution on `windows-latest`.
+- Runs the xUnit test suite in Release.
+- Publishes a self-contained `win-x64` portable build.
+- Uploads the portable build as the `FlexSliceCompanion-win-x64` artifact.
+
 Portable release:
 
 ```powershell
