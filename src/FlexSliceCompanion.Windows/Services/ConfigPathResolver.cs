@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace FlexSliceCompanion.Windows.Services;
 
 public static class ConfigPathResolver
