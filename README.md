@@ -44,6 +44,7 @@ docs/
   dax-compatibility.md
   cat-protocol.md
   wsjtx-integration.md
+  testing.md
   release-process.md
 ```
 
@@ -67,6 +68,23 @@ The workflow:
 - Runs the xUnit test suite in Release.
 - Publishes a self-contained `win-x64` portable build.
 - Uploads the portable build as the `FlexSliceCompanion-win-x64` artifact.
+- Uploads a zip archive as the `FlexSliceCompanion-win-x64-zip` artifact.
+
+The latest successful build can be downloaded from the workflow run artifacts in GitHub Actions.
+
+## Testing
+
+See [docs/testing.md](docs/testing.md) for the full test checklist.
+
+Fast checks:
+
+```powershell
+dotnet restore FlexSliceCompanion.sln
+dotnet test FlexSliceCompanion.sln --configuration Release
+./scripts/package-windows.ps1
+```
+
+Manual hardware validation needs Windows with SmartSDR, DAX, WSJT-X, and a reachable FLEX radio.
 
 Portable release:
 

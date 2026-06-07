@@ -20,4 +20,4 @@ WSJT-X is the first digital-mode app target.
   slice-D/
 ```
 
-The first pass creates and launches per-slice folders. Automated editing of WSJT-X config files should be added cautiously because the file format can change.
+The MVP creates per-slice folders and writes a companion settings file that records the intended CAT port and DAX audio endpoints. Automated editing of WSJT-X's native config files should be added cautiously because the file format can change.
